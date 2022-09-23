@@ -1,0 +1,7 @@
+set(TARGET_NAME peach)
+
+file(GLOB_RECURSE SRC_LIST ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
+
+add_executable(${TARGET_NAME} ${SRC_LIST})
+
+target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
