@@ -4,7 +4,10 @@ file(GLOB_RECURSE SRC_LIST ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 
 add_executable(${TARGET_NAME} ${SRC_LIST})
 
-target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
+target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..)
+target_include_directories(${TARGET_NAME} PUBLIC ${PEACH_THIRD_PARTY_DIR}/glfw/include)
+
+target_link_libraries(${TARGET_NAME} PUBLIC glfw)
 
 message(STATUS "Generating install")
 install(

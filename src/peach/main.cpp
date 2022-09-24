@@ -1,36 +1,37 @@
-#include <peach/peach.h>
+#include <GLFW/glfw3.h>
 
-namespace peach
+int main(int, char*[])
 {
-    namespace ttt
+    GLFWwindow* window;
+
+    /* Initialize the library */
+    if (!glfwInit())
+        return -1;
+
+    /* Create a windowed mode window and its OpenGL context */
+    window = glfwCreateWindow(640, 480, "Hello World", nullptr, nullptr);
+    if (!window)
     {
-        struct TTTTT
-        {};
-    } // namespace ttt
-} // namespace peach
-
-struct A123
-{
-    int a;
-    int b;
-    int c;
-};
-
-class XCCC : public A123
-{
-    XCCC() : tt(11), cs(11)
-    {
-        tt    = 123;
-        int c = 5;
+        glfwTerminate();
+        return -1;
     }
-    int tt;
-    int cs;
-};
 
-int main()
-{
-    int ab = 0;
-    ab++;
-    printf("%d", ab);
+    /* Make the window's context current */
+    glfwMakeContextCurrent(window);
+
+    /* Loop until the user closes the window */
+    while (!glfwWindowShouldClose(window))
+    {
+        /* Render here */
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        /* Swap front and back buffers */
+        glfwSwapBuffers(window);
+
+        /* Poll for and process events */
+        glfwPollEvents();
+    }
+
+    glfwTerminate();
     return 0;
 }
