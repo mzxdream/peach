@@ -1,7 +1,4 @@
-#ifndef __PEACH_PEACH_H__
-#define __PEACH_PEACH_H__
+#pragma once
 
 #include <cstdio>
 #include <iostream>
-
-#endif
