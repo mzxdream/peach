@@ -1,12 +1,18 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(peach VERSION 1.0.0 LANGUAGES CXX)
+set(PEACH_VERSION 1.0.0)
+
+project(peach VERSION ${PEACH_VERSION} LANGUAGES CXX)
+message(STATUS "Build peach: ${PEACH_VERSION}")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(BUILD_SHARED_LIBS OFF)
+
+if(MSVC)
+    string(APPEND CMAKE_CXX_FLAGS " /Zc:__cplusplus /MP")
+endif()
 
 set(PEACH_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-set(CMAKE_INSTALL_PREFIX "${PEACH_ROOT_DIR}/bin")
+set(CMAKE_INSTALL_PREFIX "${PEACH_ROOT_DIR}")
 
-add_subdirectory(src)
+add_subdirectory(src/peach)
