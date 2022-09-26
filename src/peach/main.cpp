@@ -126,14 +126,17 @@ int main(int, char*[])
         glViewport(0, 0, width, height);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(49.f / 255, 77.f / 255, 121.f / 255, 0.3f);
+        glClearColor(49.f / 255, 77.f / 255, 121.f / 255, 1.f);
 
         //坐标系变换
-        glm::mat4 trans = glm::translate(glm::vec3(0, 0, 0)); //不移动顶点坐标;
-        glm::mat4 rotation =
-            glm::eulerAngleYXZ(glm::radians(0.f), glm::radians(0.f), glm::radians(0.f)); //使用欧拉角旋转;
-        glm::mat4 scale = glm::scale(glm::vec3(2.0f, 2.0f, 2.0f));                       //缩放;
-        model           = trans * scale * rotation;
+        glm::mat4    trans             = glm::translate(glm::vec3(0, 0, 0)); //不移动顶点坐标;
+        static float rotate_euler_angle = 0.f;
+        rotate_euler_angle += 1;
+        glm::mat4 rotation = glm::eulerAngleYXZ(glm::radians(rotate_euler_angle),
+                                                glm::radians(rotate_euler_angle),
+                                                glm::radians(rotate_euler_angle)); //使用欧拉角旋转;
+        glm::mat4 scale    = glm::scale(glm::vec3(2.0f, 2.0f, 2.0f));             //缩放;
+        model              = trans * scale * rotation;
 
         view = glm::lookAt(glm::vec3(0, 0, 10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 
@@ -143,21 +146,21 @@ int main(int, char*[])
 
         //指定GPU程序(就是指定顶点着色器、片段着色器)
         glUseProgram(program);
-        {
-            //启用顶点Shader属性(a_pos)，指定与顶点坐标数据进行关联
-            glEnableVertexAttribArray(vpos_location);
-            glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(glm::vec3), kPositions);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE); //开启背面剔除
 
-            //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
-            glEnableVertexAttribArray(vcol_location);
-            glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, sizeof(glm::vec4), kColors);
+        //启用顶点Shader属性(a_pos)，指定与顶点坐标数据进行关联
+        glEnableVertexAttribArray(vpos_location);
+        glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(glm::vec3), kPositions);
 
-            //上传mvp矩阵
-            glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
+        //启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
+        glEnableVertexAttribArray(vcol_location);
+        glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, sizeof(glm::vec4), kColors);
 
-            //上传顶点数据并进行绘制
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-        }
+        //上传mvp矩阵
+        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
+        //上传顶点数据并进行绘制
+        glDrawArrays(GL_TRIANGLES, 0, 6 * 6);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
