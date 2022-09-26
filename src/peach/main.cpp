@@ -1,4 +1,5 @@
 #include <GLFW/glfw3.h>
+#include <peach/VertexData.h>
 
 int main(int, char*[])
 {
