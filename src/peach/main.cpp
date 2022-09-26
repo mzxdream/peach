@@ -13,7 +13,10 @@
 
 using namespace std;
 
-static void error_callback(int error, const char* description) { fprintf(stderr, "Error: %s\n", description); }
+static void error_callback(int error, const char* description)
+{
+    fprintf(stderr, "Error: %d %s\n", error, description);
+}
 
 GLFWwindow* window;
 GLuint      vertex_shader, fragment_shader, program;
@@ -34,7 +37,7 @@ void init_opengl()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
     //创建窗口
-    window = glfwCreateWindow(960, 640, "Simple example", NULL, NULL);
+    window = glfwCreateWindow(960, 640, "Simple example", nullptr, nullptr);
     if (!window)
     {
         glfwTerminate();
@@ -52,7 +55,7 @@ void compile_shader()
     //创建顶点Shader
     vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     //指定Shader源码
-    glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
+    glShaderSource(vertex_shader, 1, &vertex_shader_text, nullptr);
     //编译Shader
     glCompileShader(vertex_shader);
     //获取编译结果
@@ -61,14 +64,14 @@ void compile_shader()
     if (compile_status == GL_FALSE)
     {
         GLchar message[256];
-        glGetShaderInfoLog(vertex_shader, sizeof(message), 0, message);
+        glGetShaderInfoLog(vertex_shader, sizeof(message), nullptr, message);
         cout << "compile vs error:" << message << endl;
     }
 
     //创建片段Shader
     fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
     //指定Shader源码
-    glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
+    glShaderSource(fragment_shader, 1, &fragment_shader_text, nullptr);
     //编译Shader
     glCompileShader(fragment_shader);
     //获取编译结果
@@ -77,7 +80,7 @@ void compile_shader()
     if (compile_status == GL_FALSE)
     {
         GLchar message[256];
-        glGetShaderInfoLog(fragment_shader, sizeof(message), 0, message);
+        glGetShaderInfoLog(fragment_shader, sizeof(message), nullptr, message);
         cout << "compile fs error:" << message << endl;
     }
 
@@ -94,12 +97,12 @@ void compile_shader()
     if (link_status == GL_FALSE)
     {
         GLchar message[256];
-        glGetProgramInfoLog(program, sizeof(message), 0, message);
+        glGetProgramInfoLog(program, sizeof(message), nullptr, message);
         cout << "link error:" << message << endl;
     }
 }
 
-int main(void)
+int main(int, char*[])
 {
     init_opengl();
 
@@ -118,12 +121,12 @@ int main(void)
 
         //获取画面宽高
         glfwGetFramebufferSize(window, &width, &height);
-        ratio = width / (float)height;
+        ratio = width / static_cast<float>(height);
 
         glViewport(0, 0, width, height);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(49.f / 255, 77.f / 255, 121.f / 255, 1.f);
+        glClearColor(49.f / 255, 77.f / 255, 121.f / 255, 0.3f);
 
         //坐标系变换
         glm::mat4 trans = glm::translate(glm::vec3(0, 0, 0)); //不移动顶点坐标;
@@ -153,7 +156,7 @@ int main(void)
             glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
 
             //上传顶点数据并进行绘制
-            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
         }
 
         glfwSwapBuffers(window);
