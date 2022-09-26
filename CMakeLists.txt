@@ -25,4 +25,4 @@ set(PEACH_THIRD_PARTY_DIR "${PEACH_ROOT_DIR}/third_party")
 set(CMAKE_INSTALL_PREFIX "${PEACH_ROOT_DIR}")
 
 add_subdirectory(third_party)
-add_subdirectory(src/peach)
+add_subdirectory(src)
