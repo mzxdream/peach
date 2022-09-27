@@ -5,6 +5,8 @@ add_executable(${TARGET_NAME} ${SRC_LIST} ${GLAD_SRC_LIST})
 
 find_package(OpenGL REQUIRED)
 
+target_compile_definitions(${TARGET_NAME} PRIVATE GLFW_INCLUDE_NONE)
+
 target_include_directories(${TARGET_NAME} PRIVATE ${GLM_INC_DIR})
 target_include_directories(${TARGET_NAME} PRIVATE ${GLAD_INC_DIR})
 target_include_directories(${TARGET_NAME} PRIVATE ${GLFW_INC_DIR})
