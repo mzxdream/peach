@@ -4,10 +4,19 @@
         {
             "label": "build_win",
             "type": "shell",
+            "command": "./build_win.bat",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "command": "./build_win.bat",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "close": true,
+                "clear": false
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
