@@ -1,6 +1,9 @@
 #pragma once
 
+#include <glad/glad.h>
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 #include <iostream>
 
@@ -34,7 +37,7 @@ public:
         glfwSetFramebufferSizeCallback(window_, Render::FrameBufferSizeCallback);
         glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         glfwSetCursorPosCallback(window_, Render::MouseMoveCallback);
-        // glfwSetScrollCallback(m_window, Render::mouseScrollCallback);
+        glfwSetScrollCallback(window_, Render::MouseScrollCallback);
 
         glfwMakeContextCurrent(window_);
 
@@ -44,12 +47,55 @@ public:
     void Clear() {}
 
 private:
-    static void FrameBufferSizeCallback(GLFWwindow*, int width, int height) { glViewport(0, 0, width, height); }
-    static void MouseMoveCallback(GLFWwindow*, double xpos, double ypos) {}
+    static void FrameBufferSizeCallback(GLFWwindow* window, int width, int height)
+    {
+        (void)window;
+        glViewport(0, 0, width, height);
+    }
+    static void MouseMoveCallback(GLFWwindow* window, double xpos, double ypos)
+    {
+        (void)window;
+        if (first_mouse_)
+        {
+            last_xpos_   = xpos;
+            last_ypos_   = ypos;
+            first_mouse_ = false;
+        }
+        float xoffset = xpos - last_xpos_;
+        float yoffset = ypos - last_ypos_;
+        last_xpos_    = xpos;
+        last_ypos_    = ypos;
 
-    static double last_xpos;
-    static double last_ypos;
+        static const float SENSITIVITY = 0.05f;
+        yaw_ += xoffset * SENSITIVITY;
+        pitch_ += yoffset * SENSITIVITY;
 
-public:
+        pitch_ = std::min(std::max(pitch_, -89.0f), 89.0f);
+
+        float x = cos(glm::radians(yaw_)) * cos(glm::radians(pitch_));
+        float y = sin(glm::radians(pitch_));
+        float z = sin(glm::radians(yaw_)) * sin(glm::radians(pitch_));
+    }
+    static void MouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+    {
+        (void)window;
+        (void)xoffset;
+        if (fov_ >= 1.0f && fov_ <= 45.0f)
+        {
+            fov_ -= yoffset;
+        }
+        fov_ = std::min(std::max(fov_, 1.0f), 45.0f);
+    }
+
+    static inline bool      first_mouse_  = false;
+    static inline float     last_xpos_    = 0.0f;
+    static inline float     last_ypos_    = 0.0f;
+    static inline float     yaw_          = 0.0f;
+    static inline float     pitch_        = 0.0f;
+    static inline float     fov_          = 45.0f;
+    static inline glm::vec3 camera_pos_   = glm::vec3(0.0f, 0.0f, 3.0f);
+    static inline glm::vec3 camera_front_ = glm::vec3(0.0f, 0.0f, -1.0f);
+    static inline glm::vec3 camera_up_    = glm::vec3(0.0f, 1.0f, 0.0f);
+
     GLFWwindow* window_;
 };
