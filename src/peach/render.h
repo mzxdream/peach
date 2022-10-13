@@ -156,13 +156,13 @@ namespace peach
 
             static const float SENSITIVITY = 0.05f;
             yaw_ += xoffset * SENSITIVITY;
-            pitch_ += yoffset * SENSITIVITY;
+            pitch_ -= yoffset * SENSITIVITY;
 
             pitch_ = std::min(std::max(pitch_, -89.0f), 89.0f);
 
-            float x       = cos(glm::radians(yaw_)) * cos(glm::radians(pitch_));
+            float x       = cos(glm::radians(pitch_)) * cos(glm::radians(yaw_));
             float y       = sin(glm::radians(pitch_));
-            float z       = sin(glm::radians(yaw_)) * cos(glm::radians(pitch_));
+            float z       = cos(glm::radians(pitch_)) * sin(glm::radians(yaw_));
             camera_front_ = glm::normalize(glm::vec3(x, y, z));
         }
 
@@ -177,10 +177,10 @@ namespace peach
             fov_ = std::min(std::max(fov_, 1.0f), 45.0f);
         }
 
-        static inline bool      first_mouse_  = false;
+        static inline bool      first_mouse_  = true;
         static inline float     last_xpos_    = 0.0f;
         static inline float     last_ypos_    = 0.0f;
-        static inline float     yaw_          = 0.0f;
+        static inline float     yaw_          = -90.0f;
         static inline float     pitch_        = 0.0f;
         static inline float     fov_          = 45.0f;
         static inline glm::vec3 camera_pos_   = glm::vec3(0.0f, 0.0f, 3.0f);
