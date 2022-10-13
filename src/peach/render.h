@@ -4,6 +4,7 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <stb/stb_image.h>
 
 #include <iostream>
 
@@ -54,15 +55,15 @@ namespace peach
 
         static GLuint CreateVAO()
         {
-            unsigned int vao;
+            GLuint vao;
             glGenVertexArrays(1, &vao);
         }
 
         static void BindVAO(GLuint vao) { glBindVertexArray(vao); }
 
-        static unsigned int CreateVBOUV(float* vertices, std::size_t length)
+        static GLuint CreateVBOUV(float* vertices, std::size_t length)
         {
-            unsigned int vbo;
+            GLuint vbo;
             glGenBuffers(1, &vbo);
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
             glBufferData(GL_ARRAY_BUFFER, length, vertices, GL_STATIC_DRAW);
@@ -72,6 +73,32 @@ namespace peach
             glVertexAttribPointer(
                 1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void*>(3 * sizeof(float)));
             glEnableVertexAttribArray(1);
+            return vbo;
+        }
+
+        static GLuint CreateTexture2D(const char* texture_path, GLenum format)
+        {
+            stbi_set_flip_vertically_on_load(1);
+            int            width     = 0;
+            int            height    = 0;
+            int            nchannels = 0;
+            unsigned char* data      = stbi_load(texture_path, &width, &height, &nchannels, 0);
+            if (!data)
+            {
+                std::cout << "failed load texture2d:" << texture_path << std::endl;
+                return 0;
+            }
+            GLuint texture;
+            glGenTextures(1, &texture);
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+            stbi_image_free(data);
+            return texture;
         }
 
     private:
