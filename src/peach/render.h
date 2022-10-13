@@ -101,6 +101,31 @@ namespace peach
             return texture;
         }
 
+        static void ProcessInput(GLFWwindow* window)
+        {
+            if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            {
+                glfwSetWindowShouldClose(window, true);
+            }
+            float camera_speed = 0.05f;
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            {
+                camera_pos_ += camera_speed * camera_front_;
+            }
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            {
+                camera_pos_ -= camera_speed * camera_front_;
+            }
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            {
+                camera_pos_ -= glm::normalize(glm::cross(camera_front_, camera_up_)) * camera_speed;
+            }
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            {
+                camera_pos_ += glm::normalize(glm::cross(camera_front_, camera_up_)) * camera_speed;
+            }
+        }
+
     private:
         static void FrameBufferSizeCallback(GLFWwindow* window, int width, int height)
         {
