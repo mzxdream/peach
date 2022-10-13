@@ -40,8 +40,13 @@ public:
         glfwSetScrollCallback(window_, Render::MouseScrollCallback);
 
         glfwMakeContextCurrent(window_);
-
+        if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
+        {
+            std::cout << "failed to init glad" << std::endl;
+            return false;
+        }
         glEnable(GL_DEPTH_TEST);
+
         return true;
     }
     void Clear() {}
@@ -52,6 +57,7 @@ private:
         (void)window;
         glViewport(0, 0, width, height);
     }
+
     static void MouseMoveCallback(GLFWwindow* window, double xpos, double ypos)
     {
         (void)window;
@@ -72,10 +78,12 @@ private:
 
         pitch_ = std::min(std::max(pitch_, -89.0f), 89.0f);
 
-        float x = cos(glm::radians(yaw_)) * cos(glm::radians(pitch_));
-        float y = sin(glm::radians(pitch_));
-        float z = sin(glm::radians(yaw_)) * sin(glm::radians(pitch_));
+        float x       = cos(glm::radians(yaw_)) * cos(glm::radians(pitch_));
+        float y       = sin(glm::radians(pitch_));
+        float z       = sin(glm::radians(yaw_)) * cos(glm::radians(pitch_));
+        camera_front_ = glm::normalize(glm::vec3(x, y, z));
     }
+
     static void MouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
     {
         (void)window;
