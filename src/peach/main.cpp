@@ -24,17 +24,20 @@ int main(int, char*[])
     // shader.setInt("texture1", 0);
     // shader.setInt("texture2", 1);
 
-    GLuint vao_light = peach::Render::CreateVAO();
-    GLuint vbo_light = peach::Render::CreateVBOUV(peach::VERTICES, sizeof(peach::VERTICES));
-    (void)vbo_light;
-    Shader lighting_shader("resources/shaders/light_shader.vs", "resources/shaders/light_shader.fs");
-    lighting_shader.use();
-    lighting_shader.setVec3("objColor", 1.0f, 0.5f, 0.31f);
-    lighting_shader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+    GLuint vao_cube = peach::Render::CreateVAO();
+    GLuint vbo_cube = peach::Render::CreateVBOUV(peach::VERTICES, sizeof(peach::VERTICES));
+    (void)vbo_cube;
+    Shader cube_shader("resources/shaders/cube_shader.vs", "resources/shaders/cube_shader.fs");
+    cube_shader.use();
+    cube_shader.setVec3("objColor", 1.0f, 0.5f, 0.31f);
+    cube_shader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 
+    //GLuint vao_light = peach::Render::CreateVAO();
+    //GLuint vbo_light = peach::Render::CreateVBOUV(peach::VERTICES, sizeof(peach::VERTICES));
+    //(void)vbo_light;
     glm::vec3 light_pos(1.2f, 1.0f, 2.0f);
-    Shader lamp_shader("resources/shaders/light_shader.vs", "resources/shaders/lamp_shader.fs");
-    lamp_shader.use();
+    Shader    light_shader("resources/shaders/light_shader.vs", "resources/shaders/light_shader.fs");
+    light_shader.use();
 
     while (!glfwWindowShouldClose(window))
     {
@@ -47,22 +50,22 @@ int main(int, char*[])
         glm::mat4 projection = peach::Render::GetProjection(static_cast<float>(SCR_WIDTH) / SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 model      = glm::mat4(1.0f);
         // bind textures on corresponding texture units
-        lighting_shader.use();
-        lighting_shader.setMat4("view", view);
-        lighting_shader.setMat4("projection", projection);
-        lighting_shader.setMat4("model", model);
-        glBindVertexArray(vao_light);
+        cube_shader.use();
+        cube_shader.setMat4("view", view);
+        cube_shader.setMat4("projection", projection);
+        cube_shader.setMat4("model", model);
+        glBindVertexArray(vao_cube);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // lamp
-        lamp_shader.use();
-        lamp_shader.setMat4("view", view);
-        lamp_shader.setMat4("projection", projection);
-        glm::mat4 lamp_model = glm::mat4(1.0f);
-        lamp_model           = glm::translate(lamp_model, light_pos);
-        lamp_model           = glm::scale(lamp_model, glm::vec3(0.2f));
-        lighting_shader.setMat4("model", lamp_model);
-        glBindVertexArray(vao_light);
+        light_shader.use();
+        light_shader.setMat4("view", view);
+        light_shader.setMat4("projection", projection);
+        glm::mat4 light_model = glm::mat4(1.0f);
+        light_model           = glm::translate(light_model, light_pos);
+        light_model           = glm::scale(light_model, glm::vec3(0.2f));
+        light_shader.setMat4("model", light_model);
+        glBindVertexArray(vao_cube);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

@@ -183,7 +183,7 @@ namespace peach
         static inline float     yaw_          = -90.0f;
         static inline float     pitch_        = 0.0f;
         static inline float     fov_          = 45.0f;
-        static inline glm::vec3 camera_pos_   = glm::vec3(0.0f, 0.0f, 3.0f);
+        static inline glm::vec3 camera_pos_   = glm::vec3(0.0f, 0.0f, 5.0f);
         static inline glm::vec3 camera_front_ = glm::vec3(0.0f, 0.0f, -1.0f);
         static inline glm::vec3 camera_up_    = glm::vec3(0.0f, 1.0f, 0.0f);
     };
