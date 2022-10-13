@@ -4,6 +4,7 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/glm/gtc/matrix_transform.hpp>
 #include <stb/stb_image.h>
 
 #include <iostream>
@@ -57,11 +58,11 @@ namespace peach
         {
             GLuint vao;
             glGenVertexArrays(1, &vao);
+            glBindVertexArray(vao);
+            return vao;
         }
 
-        static void BindVAO(GLuint vao) { glBindVertexArray(vao); }
-
-        static GLuint CreateVBOUV(float* vertices, std::size_t length)
+        static GLuint CreateVBOUV(const float* vertices, std::size_t length)
         {
             GLuint vbo;
             glGenBuffers(1, &vbo);
@@ -124,6 +125,12 @@ namespace peach
             {
                 camera_pos_ += glm::normalize(glm::cross(camera_front_, camera_up_)) * camera_speed;
             }
+        }
+
+        static glm::mat4 GetView() { return glm::lookAt(camera_pos_, camera_pos_ + camera_front_, camera_up_); }
+        static glm::mat4 GetProjection(float aspect, float near, float far)
+        {
+            return glm::perspective(glm::radians(fov_), aspect, near, far);
         }
 
     private:
